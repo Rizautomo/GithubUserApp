@@ -29,7 +29,6 @@ class LayoutFragment : Fragment() {
     private lateinit var adapter: UsersAdapter
 
     companion object {
-
         const val ARG_POSITION = "position"
         const val ARG_USERNAME = "username"
 
@@ -43,8 +42,10 @@ class LayoutFragment : Fragment() {
             }
     }
     // TODO: Rename and change types of parameters
-    private var param1: String? = null
+    /*private var param1: String? = null
     private var param2: String? = null
+
+     */
 
 
     override fun onCreateView(
@@ -60,37 +61,37 @@ class LayoutFragment : Fragment() {
         viewModel = ViewModelProvider(this).get(LayoutFragmentViewModel::class.java)
         adapter = UsersAdapter()
 
-        binding.rvUser.layoutManager = LinearLayoutManager(requireContext())
+        binding.rvUser.layoutManager = LinearLayoutManager(requireActivity())
         binding.rvUser.adapter = adapter
 
-        var position = requireArguments().getInt(ARG_POSITION)
-        var username = requireArguments().getString(ARG_USERNAME)
+        var position: Int
+        var username: String
 
         arguments?.let {
             position = it.getInt(ARG_POSITION)
-            username = it.getString(ARG_USERNAME)
-        }
+            username = it.getString(ARG_USERNAME).toString()
 
+            if (position == 1) {
+                viewModel.fetchFollowing(username )
+                viewModel.following.observe(viewLifecycleOwner) { following ->
+                    adapter.submitList(following)
+                }
+            } else {
+                viewModel.fetchFollower(username)
+                viewModel.followers.observe(viewLifecycleOwner) { followers ->
+                    adapter.submitList(followers)
+                }
+            }
 
-        if (position == 1) {
-            viewModel.fetchFollowing(username?:"")
-            viewModel.following.observe(viewLifecycleOwner) { following ->
-                adapter.submitList(following)
-            }
-        } else {
-            viewModel.fetchFollower(username ?: "")
-            viewModel.followers.observe(viewLifecycleOwner) { followers ->
-                adapter.submitList(followers)
-            }
         }
 
 
         viewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
-            if (isLoading) {
-                binding.progressBar.visibility = View.VISIBLE
-            } else {
-                binding.progressBar.visibility = View.GONE
+                if (isLoading) {
+                    binding.progressBar.visibility = View.VISIBLE
+                } else {
+                    binding.progressBar.visibility = View.GONE
+                }
             }
         }
     }
-}

@@ -36,7 +36,6 @@ class DetailUserActivity : AppCompatActivity() {
         const val username = "String"
     }
     private lateinit var binding: ActivityDetailUserBinding
-    private lateinit var viewModel: MainViewModel
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -46,9 +45,14 @@ class DetailUserActivity : AppCompatActivity() {
 
         val gitUsername = intent.getStringExtra(username)
 
+        //for log detail useractivity
         //Log.d("DetailUserActivity", testUserName.toString())
 
+        // edited code from forum discussion dicoding
         val sectionsPagerAdapter = SectionsPagerAdapter(this)
+        if (gitUsername != null) {
+            sectionsPagerAdapter.username = gitUsername
+        }
         sectionsPagerAdapter.username = username
         binding.viewPager.adapter = sectionsPagerAdapter
         val viewPager: ViewPager2 = findViewById(R.id.view_pager)
@@ -62,6 +66,7 @@ class DetailUserActivity : AppCompatActivity() {
         supportActionBar?.elevation = 0f
 
         showLoading(true)
+
         if (gitUsername != null) {
             getUserDetail(gitUsername)
         }

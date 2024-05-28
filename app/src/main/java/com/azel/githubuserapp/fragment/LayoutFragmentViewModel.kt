@@ -20,6 +20,8 @@ class LayoutFragmentViewModel : ViewModel() {
     private val _following = MutableLiveData<List<ItemsItem>>()
     val following: LiveData<List<ItemsItem>> = _following
 
+    //log.d("LayoutFragmentViewModel", testUserName.toString())
+
     fun fetchFollower(username: String) {
         _isLoading.value = true
         val client = ApiConfig.getServiceApi().getListFollowers(username)
